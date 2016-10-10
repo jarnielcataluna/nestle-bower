@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Nestle\CoreBundle\Utils\PropelrrConstant as C;
 use Nestle\CoreBundle\Utils\PropelrrUploader as UP;
+
 class CyclePlanController extends Controller
 {
 
@@ -48,16 +49,17 @@ class CyclePlanController extends Controller
             $keyname = 'AKIAJ4R2SJVB3S2F6DOA';
             $secret = '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';
 
+            $options = [
+                'region'            => 'ap-southeast-1',
+                'version'           => 'latest',
+                'signature_version' => 'v4',
+                'credentials' => [
+                    'key'    => 'AKIAJ4R2SJVB3S2F6DOA',
+                    'secret' => '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'
+                ]
+            ];
 
-
-            $s3 = S3Client::factory([
-                'region' => 'ap-southeast-1',
-                'version' => 'latest',
-                'credentials' => array(
-                    'key' =>  $keyname,
-                    'secret' => $secret
-                )
-            ]);
+            $s3Client = new S3Client($options);
 
             $prod = $request->files->get('cp_file');
 
@@ -65,7 +67,7 @@ class CyclePlanController extends Controller
 
                 try {
 
-                    $result = $s3->putObject(array(
+                    $result = $s3Client->putObject(array(
                         'Bucket' => $bucket,
                         'Key' => "cycle-plans/" . $_FILES['cp_file']['name'],
                         'Body' => fopen($prod->getPathName(), 'rb'),
