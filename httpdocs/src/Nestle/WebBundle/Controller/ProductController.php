@@ -459,13 +459,17 @@ class ProductController extends Controller
             $status = 1;
 
             $bucket = 'nestle-bower-image-hosting';
-            $keyname = 'AKIAITYEZ5N4YWEYTVWQ';
-            $filepath = 'product-images';
+            $options = [
+                'region'            => 'ap-southeast-1',
+                'version'           => 'latest',
+                'signature_version' => 'v4',
+                'credentials' => [
+                    'key'    => 'AKIAJ4R2SJVB3S2F6DOA',
+                    'secret' => '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'
+                ]
+            ];
 
-            $s3 = S3Client::factory([
-                'region' => 'ap-southeast-1',
-                'version' => 'latest'
-            ]);
+            $s3Client = new S3Client($options);
 
             $prod = $request->files->get('image');
             $thumb = $request->files->get('thumbnail');
@@ -475,7 +479,7 @@ class ProductController extends Controller
 
                 try {
 
-                    $result = $s3->putObject(array(
+                    $result = $s3Client->putObject(array(
                         'Bucket' => $bucket,
                         'Key' => "product-images/" . $_FILES['image']['name'],
                         'Body' => fopen($prod->getPathName(), 'rb'),
