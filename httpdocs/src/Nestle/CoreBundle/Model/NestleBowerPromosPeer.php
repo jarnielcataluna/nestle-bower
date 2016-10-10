@@ -60,10 +60,10 @@ class NestleBowerPromosPeer extends BaseNestleBowerPromosPeer
 			$c = new Criteria();
 		}
 
-		$c1 = $c->getNewCriterion('region_id', $region);
-		$c2 = $c->getNewCriterion('region_id', 0);
-		$c1->addOr($c2);
-		$c->add($c);
+        $c1 = $c->getNewCriterion(self::REGION_ID, $region, Criteria::EQUAL);
+        $c2 = $c->getNewCriterion(self::REGION_ID, 0 , Criteria::EQUAL);
+        $c1->addOr($c2);
+        $c->add($c1);
 
 		$_self = self::doSelect($c);
 
