@@ -45,12 +45,18 @@ class CyclePlanController extends Controller
             $newCp->setDate($cpDate);
 
             $bucket = 'nestle-bower-image-hosting';
-            $keyname = 'AKIAITYEZ5N4YWEYTVWQ';
-            $filepath = 'cycle-plans';
+            $keyname = 'AKIAJ4R2SJVB3S2F6DOA';
+            $secret = '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';
+
+
 
             $s3 = S3Client::factory([
                 'region' => 'ap-southeast-1',
-                'version' => 'latest'
+                'version' => 'latest',
+                'credentials' => array(
+                    'key' =>  $keyname,
+                    'secret' => $secret
+                )
             ]);
 
             $prod = $request->files->get('cp_file');
