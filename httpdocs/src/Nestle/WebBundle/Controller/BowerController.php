@@ -52,6 +52,8 @@ class BowerController extends Controller
             $city = $cityObj->getCity();
             $province = $provObj->getProvince();
             $region = $regionObj->getRegion();
+            $nestleregion = $fil->getNestleOfficialRegions() ? $fil->getNestleOfficialRegions()->getNestleRegion() : null ;
+            $distributor = $fil->getDistributor();
 
             if ($fil->getStatus() == 1) {
                 $status = "Active";
@@ -68,8 +70,9 @@ class BowerController extends Controller
                 'area' => $area,
                 'city' => $city,
                 'province' => $province,
-                'region' => $region,
-                'status' => $status
+                'region' => $nestleregion,
+                'status' => $status,
+                'distributor' => $distributor,
             );
 
 
@@ -123,6 +126,7 @@ class BowerController extends Controller
         foreach ($filtered as $fil) {
             $f = new NestleBower();
 
+
             $areaObj = NestleBowerAreaPeer::retrieveByPK($fil->getAreaId());
             $cityObj = NestleBowerCityPeer::retrieveByPK($areaObj->getCityId());
             $provObj = NestleBowerProvincePeer::retrieveByPK($cityObj->getProvinceId());
@@ -134,6 +138,9 @@ class BowerController extends Controller
             $city = $cityObj->getCity();
             $province = $provObj->getProvince();
             $region = $regionObj->getRegion();
+            $nestleregion = $fil->getNestleOfficialRegions()->getNestleRegion();
+            $distributor = $fil->getDistributor();
+            $bowerId = $fil->getBowerId();
 
             if ($fil->getStatus() == 1) {
                 $status = "Active";
@@ -149,14 +156,16 @@ class BowerController extends Controller
                     "style" => 'cursor: pointer',
                     "data-id" => $fil->getId()
                 ),
-                0 => $username,
-                1 => $fname,
-                2 => $lname,
+
+                0 => $bowerId,
+                1 => $username,
+                2 => $fname . ' ' . $lname,
                 3 => $area,
                 4 => $city,
-                5 => $province,
-                6 => $region,
-                7 => $status
+                5 => $nestleregion,
+                6 => $distributor,
+                7 => $status,
+
             );
 
 
@@ -200,6 +209,7 @@ class BowerController extends Controller
             $city = $request->request->get('city');
             $area = $request->request->get('area');
             $new_area = $request->request->get('new_area');
+            $nestle_region = $request->request->get('nestle_region');
             if($area == 0 OR !isset($area) OR empty($area)){
                 if(!empty($new_area)){
                     $new_area_obj = new NestleBowerArea();
@@ -228,6 +238,7 @@ class BowerController extends Controller
                     $new_bower->setAreaId($area);
                     $new_bower->setBowerId($bowerId);
                     $new_bower->setDistributor($distributor);
+                    $new_bower->setNestleRegion($nestle_region);
 
                     if ($new_bower->save()) {
 
@@ -308,6 +319,9 @@ class BowerController extends Controller
             $edit_area = $request->request->get('area');
             $new_area = $request->request->get('new_area');
             $distributor = $request->request->get('distributor');
+            $nestle_region = $request->request->get('nestle_region');
+
+
             if($edit_area == 0 OR !isset($edit_area) OR empty($edit_area)){
                 if(!empty($new_area)){
                     $new_area_obj = new NestleBowerArea();
@@ -333,6 +347,8 @@ class BowerController extends Controller
                 $bower->setContactNumber($contact);
                 $bower->setAreaId($edit_area);
                 $bower->setDistributor($distributor);
+                $bower->setDistributor($distributor);
+                $bower->setNestleRegion($nestle_region);
 
                 if ($bower->save()) {
                     $this->get('session')->getFlashBag()->add('notice', 'Successfully updated bower!');
