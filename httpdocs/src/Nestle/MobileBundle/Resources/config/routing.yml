@@ -28,5 +28,5 @@ nestle_mobile_bower_forgot_password:
 
 nestle_mobile_bower_cycle_plan:
     path:     /bower/cycle-plan
-    defaults: { _controller: NestleMobileBundle:Main:retrieveCyclePlan }
+    defaults: { _controller: NestleMobileBundle:Main:retrieveCyclePlans }
 

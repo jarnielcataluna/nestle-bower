@@ -391,36 +391,38 @@ class MainController extends Controller
 
 
 
-	public function retrieveCyclePlansAction()
-	{
-		$request = $this->getRequest();
-		$key = $request->request->get('web_service_key');
-		$bowerId = $request->request->get('id');
+    public function retrieveCyclePlansAction()
+    {
+         $request = $this->getRequest();
+         $key = $request->request->get('web_service_key');
+         $bowerId = $request->request->get('id');
 
-		if ($key == $this->webkey && isset($bowerId)) {
-			$cycle = NestleNestleCyclePlansPeer::getAll();
-			$cycles['cycle_plans'] = array();
+         if ($key == $this->webkey && isset($bowerId)) {
+                $cycle = NestleNestleCyclePlansPeer::getAllActive();
+                $cycles = array();
 
-			foreach ($cycle as $cp) {
-				$temp = array(
-					'id' => $cp->getId(),
-					'title' => $cp->getTitle(),
-					'date' => $cp->getDate(),
-					'file' => $cp->getLink(),
-					'status' => $cp->getStatus()
+                foreach ($cycle as $cp) {
+                    $temp = array(
+                        'id' => $cp->getId(),
+                        'title' => $cp->getTitle(),
+                        'date' => $cp->getDate(),
+                        'file' => $cp->getLink(),
+                        'status' => $cp->getStatus()
 
-				);
+                    );
 
-				array_push($cycles['cycle_plans'], $temp);
-			}
+                    array_push($cycles, $temp);
+                }
 
-			echo json_encode($cycles);
-			exit;
+                $json = array('cycle_plan' => $cycles);
 
-		} else {
-			throw new AccessDeniedHttpException();
-		}
-	}
+                echo json_encode($json);
+                exit;
+
+         } else {
+             throw new AccessDeniedHttpException();
+         }
+    }
 
 
 
