@@ -13,6 +13,7 @@ use Nestle\CoreBundle\Model\NestleBower;
 use Nestle\CoreBundle\Model\NestleBowerAreaPeer;
 use Nestle\CoreBundle\Model\NestleBowerPeer;
 use Nestle\CoreBundle\Model\NestleNestleDistributorsPeer;
+use Nestle\CoreBundle\Model\NestleOfficialRegionsPeer;
 use Nestle\CoreBundle\Model\map\NestleBowerTableMap;
 
 abstract class BaseNestleBowerPeer
@@ -31,13 +32,13 @@ abstract class BaseNestleBowerPeer
     const TM_CLASS = 'Nestle\\CoreBundle\\Model\\map\\NestleBowerTableMap';
 
     /** The total number of columns. */
-    const NUM_COLUMNS = 12;
+    const NUM_COLUMNS = 13;
 
     /** The number of lazy-loaded columns. */
     const NUM_LAZY_LOAD_COLUMNS = 0;
 
     /** The number of columns to hydrate (NUM_COLUMNS - NUM_LAZY_LOAD_COLUMNS) */
-    const NUM_HYDRATE_COLUMNS = 12;
+    const NUM_HYDRATE_COLUMNS = 13;
 
     /** the column name for the id field */
     const ID = 'bower.id';
@@ -72,6 +73,9 @@ abstract class BaseNestleBowerPeer
     /** the column name for the distributor field */
     const DISTRIBUTOR = 'bower.distributor';
 
+    /** the column name for the nestle_region field */
+    const NESTLE_REGION = 'bower.nestle_region';
+
     /** the column name for the distributor_id field */
     const DISTRIBUTOR_ID = 'bower.distributor_id';
 
@@ -94,12 +98,12 @@ abstract class BaseNestleBowerPeer
      * e.g. NestleBowerPeer::$fieldNames[NestleBowerPeer::TYPE_PHPNAME][0] = 'Id'
      */
     protected static $fieldNames = array (
-        BasePeer::TYPE_PHPNAME => array ('Id', 'Fname', 'Lname', 'ContactNumber', 'Bdate', 'Username', 'Password', 'AreaId', 'Status', 'BowerId', 'Distributor', 'DistributorId', ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'fname', 'lname', 'contactNumber', 'bdate', 'username', 'password', 'areaId', 'status', 'bowerId', 'distributor', 'distributorId', ),
-        BasePeer::TYPE_COLNAME => array (NestleBowerPeer::ID, NestleBowerPeer::FNAME, NestleBowerPeer::LNAME, NestleBowerPeer::CONTACT_NUMBER, NestleBowerPeer::BDATE, NestleBowerPeer::USERNAME, NestleBowerPeer::PASSWORD, NestleBowerPeer::AREA_ID, NestleBowerPeer::STATUS, NestleBowerPeer::BOWER_ID, NestleBowerPeer::DISTRIBUTOR, NestleBowerPeer::DISTRIBUTOR_ID, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FNAME', 'LNAME', 'CONTACT_NUMBER', 'BDATE', 'USERNAME', 'PASSWORD', 'AREA_ID', 'STATUS', 'BOWER_ID', 'DISTRIBUTOR', 'DISTRIBUTOR_ID', ),
-        BasePeer::TYPE_FIELDNAME => array ('id', 'fname', 'lname', 'contact_number', 'bdate', 'username', 'password', 'area_id', 'status', 'bower_id', 'distributor', 'distributor_id', ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+        BasePeer::TYPE_PHPNAME => array ('Id', 'Fname', 'Lname', 'ContactNumber', 'Bdate', 'Username', 'Password', 'AreaId', 'Status', 'BowerId', 'Distributor', 'NestleRegion', 'DistributorId', ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id', 'fname', 'lname', 'contactNumber', 'bdate', 'username', 'password', 'areaId', 'status', 'bowerId', 'distributor', 'nestleRegion', 'distributorId', ),
+        BasePeer::TYPE_COLNAME => array (NestleBowerPeer::ID, NestleBowerPeer::FNAME, NestleBowerPeer::LNAME, NestleBowerPeer::CONTACT_NUMBER, NestleBowerPeer::BDATE, NestleBowerPeer::USERNAME, NestleBowerPeer::PASSWORD, NestleBowerPeer::AREA_ID, NestleBowerPeer::STATUS, NestleBowerPeer::BOWER_ID, NestleBowerPeer::DISTRIBUTOR, NestleBowerPeer::NESTLE_REGION, NestleBowerPeer::DISTRIBUTOR_ID, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID', 'FNAME', 'LNAME', 'CONTACT_NUMBER', 'BDATE', 'USERNAME', 'PASSWORD', 'AREA_ID', 'STATUS', 'BOWER_ID', 'DISTRIBUTOR', 'NESTLE_REGION', 'DISTRIBUTOR_ID', ),
+        BasePeer::TYPE_FIELDNAME => array ('id', 'fname', 'lname', 'contact_number', 'bdate', 'username', 'password', 'area_id', 'status', 'bower_id', 'distributor', 'nestle_region', 'distributor_id', ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -109,12 +113,12 @@ abstract class BaseNestleBowerPeer
      * e.g. NestleBowerPeer::$fieldNames[BasePeer::TYPE_PHPNAME]['Id'] = 0
      */
     protected static $fieldKeys = array (
-        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Fname' => 1, 'Lname' => 2, 'ContactNumber' => 3, 'Bdate' => 4, 'Username' => 5, 'Password' => 6, 'AreaId' => 7, 'Status' => 8, 'BowerId' => 9, 'Distributor' => 10, 'DistributorId' => 11, ),
-        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'fname' => 1, 'lname' => 2, 'contactNumber' => 3, 'bdate' => 4, 'username' => 5, 'password' => 6, 'areaId' => 7, 'status' => 8, 'bowerId' => 9, 'distributor' => 10, 'distributorId' => 11, ),
-        BasePeer::TYPE_COLNAME => array (NestleBowerPeer::ID => 0, NestleBowerPeer::FNAME => 1, NestleBowerPeer::LNAME => 2, NestleBowerPeer::CONTACT_NUMBER => 3, NestleBowerPeer::BDATE => 4, NestleBowerPeer::USERNAME => 5, NestleBowerPeer::PASSWORD => 6, NestleBowerPeer::AREA_ID => 7, NestleBowerPeer::STATUS => 8, NestleBowerPeer::BOWER_ID => 9, NestleBowerPeer::DISTRIBUTOR => 10, NestleBowerPeer::DISTRIBUTOR_ID => 11, ),
-        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FNAME' => 1, 'LNAME' => 2, 'CONTACT_NUMBER' => 3, 'BDATE' => 4, 'USERNAME' => 5, 'PASSWORD' => 6, 'AREA_ID' => 7, 'STATUS' => 8, 'BOWER_ID' => 9, 'DISTRIBUTOR' => 10, 'DISTRIBUTOR_ID' => 11, ),
-        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'fname' => 1, 'lname' => 2, 'contact_number' => 3, 'bdate' => 4, 'username' => 5, 'password' => 6, 'area_id' => 7, 'status' => 8, 'bower_id' => 9, 'distributor' => 10, 'distributor_id' => 11, ),
-        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, )
+        BasePeer::TYPE_PHPNAME => array ('Id' => 0, 'Fname' => 1, 'Lname' => 2, 'ContactNumber' => 3, 'Bdate' => 4, 'Username' => 5, 'Password' => 6, 'AreaId' => 7, 'Status' => 8, 'BowerId' => 9, 'Distributor' => 10, 'NestleRegion' => 11, 'DistributorId' => 12, ),
+        BasePeer::TYPE_STUDLYPHPNAME => array ('id' => 0, 'fname' => 1, 'lname' => 2, 'contactNumber' => 3, 'bdate' => 4, 'username' => 5, 'password' => 6, 'areaId' => 7, 'status' => 8, 'bowerId' => 9, 'distributor' => 10, 'nestleRegion' => 11, 'distributorId' => 12, ),
+        BasePeer::TYPE_COLNAME => array (NestleBowerPeer::ID => 0, NestleBowerPeer::FNAME => 1, NestleBowerPeer::LNAME => 2, NestleBowerPeer::CONTACT_NUMBER => 3, NestleBowerPeer::BDATE => 4, NestleBowerPeer::USERNAME => 5, NestleBowerPeer::PASSWORD => 6, NestleBowerPeer::AREA_ID => 7, NestleBowerPeer::STATUS => 8, NestleBowerPeer::BOWER_ID => 9, NestleBowerPeer::DISTRIBUTOR => 10, NestleBowerPeer::NESTLE_REGION => 11, NestleBowerPeer::DISTRIBUTOR_ID => 12, ),
+        BasePeer::TYPE_RAW_COLNAME => array ('ID' => 0, 'FNAME' => 1, 'LNAME' => 2, 'CONTACT_NUMBER' => 3, 'BDATE' => 4, 'USERNAME' => 5, 'PASSWORD' => 6, 'AREA_ID' => 7, 'STATUS' => 8, 'BOWER_ID' => 9, 'DISTRIBUTOR' => 10, 'NESTLE_REGION' => 11, 'DISTRIBUTOR_ID' => 12, ),
+        BasePeer::TYPE_FIELDNAME => array ('id' => 0, 'fname' => 1, 'lname' => 2, 'contact_number' => 3, 'bdate' => 4, 'username' => 5, 'password' => 6, 'area_id' => 7, 'status' => 8, 'bower_id' => 9, 'distributor' => 10, 'nestle_region' => 11, 'distributor_id' => 12, ),
+        BasePeer::TYPE_NUM => array (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, )
     );
 
     /**
@@ -199,6 +203,7 @@ abstract class BaseNestleBowerPeer
             $criteria->addSelectColumn(NestleBowerPeer::STATUS);
             $criteria->addSelectColumn(NestleBowerPeer::BOWER_ID);
             $criteria->addSelectColumn(NestleBowerPeer::DISTRIBUTOR);
+            $criteria->addSelectColumn(NestleBowerPeer::NESTLE_REGION);
             $criteria->addSelectColumn(NestleBowerPeer::DISTRIBUTOR_ID);
         } else {
             $criteria->addSelectColumn($alias . '.id');
@@ -212,6 +217,7 @@ abstract class BaseNestleBowerPeer
             $criteria->addSelectColumn($alias . '.status');
             $criteria->addSelectColumn($alias . '.bower_id');
             $criteria->addSelectColumn($alias . '.distributor');
+            $criteria->addSelectColumn($alias . '.nestle_region');
             $criteria->addSelectColumn($alias . '.distributor_id');
         }
     }
@@ -566,6 +572,57 @@ abstract class BaseNestleBowerPeer
 
 
     /**
+     * Returns the number of rows matching criteria, joining the related NestleOfficialRegions table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinNestleOfficialRegions(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(NestleBowerPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            NestleBowerPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY won't ever affect the count
+
+        // Set the correct dbName
+        $criteria->setDbName(NestleBowerPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(NestleBowerPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(NestleBowerPeer::NESTLE_REGION, NestleOfficialRegionsPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
      * Returns the number of rows matching criteria, joining the related NestleBowerArea table
      *
      * @param      Criteria $criteria
@@ -684,6 +741,73 @@ abstract class BaseNestleBowerPeer
 
 
     /**
+     * Selects a collection of NestleBower objects pre-filled with their NestleOfficialRegions objects.
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of NestleBower objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinNestleOfficialRegions(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(NestleBowerPeer::DATABASE_NAME);
+        }
+
+        NestleBowerPeer::addSelectColumns($criteria);
+        $startcol = NestleBowerPeer::NUM_HYDRATE_COLUMNS;
+        NestleOfficialRegionsPeer::addSelectColumns($criteria);
+
+        $criteria->addJoin(NestleBowerPeer::NESTLE_REGION, NestleOfficialRegionsPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = NestleBowerPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = NestleBowerPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+
+                $cls = NestleBowerPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                NestleBowerPeer::addInstanceToPool($obj1, $key1);
+            } // if $obj1 already loaded
+
+            $key2 = NestleOfficialRegionsPeer::getPrimaryKeyHashFromRow($row, $startcol);
+            if ($key2 !== null) {
+                $obj2 = NestleOfficialRegionsPeer::getInstanceFromPool($key2);
+                if (!$obj2) {
+
+                    $cls = NestleOfficialRegionsPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol);
+                    NestleOfficialRegionsPeer::addInstanceToPool($obj2, $key2);
+                } // if obj2 already loaded
+
+                // Add the $obj1 (NestleBower) to $obj2 (NestleOfficialRegions)
+                $obj2->addNestleBower($obj1);
+
+            } // if joined row was not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
      * Selects a collection of NestleBower objects pre-filled with their NestleBowerArea objects.
      * @param      Criteria  $criteria
      * @param      PropelPDO $con
@@ -788,6 +912,8 @@ abstract class BaseNestleBowerPeer
 
         $criteria->addJoin(NestleBowerPeer::DISTRIBUTOR_ID, NestleNestleDistributorsPeer::ID, $join_behavior);
 
+        $criteria->addJoin(NestleBowerPeer::NESTLE_REGION, NestleOfficialRegionsPeer::ID, $join_behavior);
+
         $criteria->addJoin(NestleBowerPeer::AREA_ID, NestleBowerAreaPeer::ID, $join_behavior);
 
         $stmt = BasePeer::doCount($criteria, $con);
@@ -827,10 +953,15 @@ abstract class BaseNestleBowerPeer
         NestleNestleDistributorsPeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + NestleNestleDistributorsPeer::NUM_HYDRATE_COLUMNS;
 
+        NestleOfficialRegionsPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + NestleOfficialRegionsPeer::NUM_HYDRATE_COLUMNS;
+
         NestleBowerAreaPeer::addSelectColumns($criteria);
-        $startcol4 = $startcol3 + NestleBowerAreaPeer::NUM_HYDRATE_COLUMNS;
+        $startcol5 = $startcol4 + NestleBowerAreaPeer::NUM_HYDRATE_COLUMNS;
 
         $criteria->addJoin(NestleBowerPeer::DISTRIBUTOR_ID, NestleNestleDistributorsPeer::ID, $join_behavior);
+
+        $criteria->addJoin(NestleBowerPeer::NESTLE_REGION, NestleOfficialRegionsPeer::ID, $join_behavior);
 
         $criteria->addJoin(NestleBowerPeer::AREA_ID, NestleBowerAreaPeer::ID, $join_behavior);
 
@@ -869,22 +1000,40 @@ abstract class BaseNestleBowerPeer
                 $obj2->addNestleBower($obj1);
             } // if joined row not null
 
-            // Add objects for joined NestleBowerArea rows
+            // Add objects for joined NestleOfficialRegions rows
 
-            $key3 = NestleBowerAreaPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+            $key3 = NestleOfficialRegionsPeer::getPrimaryKeyHashFromRow($row, $startcol3);
             if ($key3 !== null) {
-                $obj3 = NestleBowerAreaPeer::getInstanceFromPool($key3);
+                $obj3 = NestleOfficialRegionsPeer::getInstanceFromPool($key3);
                 if (!$obj3) {
 
-                    $cls = NestleBowerAreaPeer::getOMClass();
+                    $cls = NestleOfficialRegionsPeer::getOMClass();
 
                     $obj3 = new $cls();
                     $obj3->hydrate($row, $startcol3);
-                    NestleBowerAreaPeer::addInstanceToPool($obj3, $key3);
+                    NestleOfficialRegionsPeer::addInstanceToPool($obj3, $key3);
                 } // if obj3 loaded
 
-                // Add the $obj1 (NestleBower) to the collection in $obj3 (NestleBowerArea)
+                // Add the $obj1 (NestleBower) to the collection in $obj3 (NestleOfficialRegions)
                 $obj3->addNestleBower($obj1);
+            } // if joined row not null
+
+            // Add objects for joined NestleBowerArea rows
+
+            $key4 = NestleBowerAreaPeer::getPrimaryKeyHashFromRow($row, $startcol4);
+            if ($key4 !== null) {
+                $obj4 = NestleBowerAreaPeer::getInstanceFromPool($key4);
+                if (!$obj4) {
+
+                    $cls = NestleBowerAreaPeer::getOMClass();
+
+                    $obj4 = new $cls();
+                    $obj4->hydrate($row, $startcol4);
+                    NestleBowerAreaPeer::addInstanceToPool($obj4, $key4);
+                } // if obj4 loaded
+
+                // Add the $obj1 (NestleBower) to the collection in $obj4 (NestleBowerArea)
+                $obj4->addNestleBower($obj1);
             } // if joined row not null
 
             $results[] = $obj1;
@@ -930,6 +1079,61 @@ abstract class BaseNestleBowerPeer
         if ($con === null) {
             $con = Propel::getConnection(NestleBowerPeer::DATABASE_NAME, Propel::CONNECTION_READ);
         }
+
+        $criteria->addJoin(NestleBowerPeer::NESTLE_REGION, NestleOfficialRegionsPeer::ID, $join_behavior);
+
+        $criteria->addJoin(NestleBowerPeer::AREA_ID, NestleBowerAreaPeer::ID, $join_behavior);
+
+        $stmt = BasePeer::doCount($criteria, $con);
+
+        if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $count = (int) $row[0];
+        } else {
+            $count = 0; // no rows returned; we infer that means 0 matches.
+        }
+        $stmt->closeCursor();
+
+        return $count;
+    }
+
+
+    /**
+     * Returns the number of rows matching criteria, joining the related NestleOfficialRegions table
+     *
+     * @param      Criteria $criteria
+     * @param      boolean $distinct Whether to select only distinct columns; deprecated: use Criteria->setDistinct() instead.
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return int Number of matching rows.
+     */
+    public static function doCountJoinAllExceptNestleOfficialRegions(Criteria $criteria, $distinct = false, PropelPDO $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        // we're going to modify criteria, so copy it first
+        $criteria = clone $criteria;
+
+        // We need to set the primary table name, since in the case that there are no WHERE columns
+        // it will be impossible for the BasePeer::createSelectSql() method to determine which
+        // tables go into the FROM clause.
+        $criteria->setPrimaryTableName(NestleBowerPeer::TABLE_NAME);
+
+        if ($distinct && !in_array(Criteria::DISTINCT, $criteria->getSelectModifiers())) {
+            $criteria->setDistinct();
+        }
+
+        if (!$criteria->hasSelectClause()) {
+            NestleBowerPeer::addSelectColumns($criteria);
+        }
+
+        $criteria->clearOrderByColumns(); // ORDER BY should not affect count
+
+        // Set the correct dbName
+        $criteria->setDbName(NestleBowerPeer::DATABASE_NAME);
+
+        if ($con === null) {
+            $con = Propel::getConnection(NestleBowerPeer::DATABASE_NAME, Propel::CONNECTION_READ);
+        }
+
+        $criteria->addJoin(NestleBowerPeer::DISTRIBUTOR_ID, NestleNestleDistributorsPeer::ID, $join_behavior);
 
         $criteria->addJoin(NestleBowerPeer::AREA_ID, NestleBowerAreaPeer::ID, $join_behavior);
 
@@ -984,6 +1188,8 @@ abstract class BaseNestleBowerPeer
 
         $criteria->addJoin(NestleBowerPeer::DISTRIBUTOR_ID, NestleNestleDistributorsPeer::ID, $join_behavior);
 
+        $criteria->addJoin(NestleBowerPeer::NESTLE_REGION, NestleOfficialRegionsPeer::ID, $join_behavior);
+
         $stmt = BasePeer::doCount($criteria, $con);
 
         if ($row = $stmt->fetch(PDO::FETCH_NUM)) {
@@ -1021,8 +1227,13 @@ abstract class BaseNestleBowerPeer
         NestleBowerPeer::addSelectColumns($criteria);
         $startcol2 = NestleBowerPeer::NUM_HYDRATE_COLUMNS;
 
+        NestleOfficialRegionsPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + NestleOfficialRegionsPeer::NUM_HYDRATE_COLUMNS;
+
         NestleBowerAreaPeer::addSelectColumns($criteria);
-        $startcol3 = $startcol2 + NestleBowerAreaPeer::NUM_HYDRATE_COLUMNS;
+        $startcol4 = $startcol3 + NestleBowerAreaPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(NestleBowerPeer::NESTLE_REGION, NestleOfficialRegionsPeer::ID, $join_behavior);
 
         $criteria->addJoin(NestleBowerPeer::AREA_ID, NestleBowerAreaPeer::ID, $join_behavior);
 
@@ -1044,22 +1255,139 @@ abstract class BaseNestleBowerPeer
                 NestleBowerPeer::addInstanceToPool($obj1, $key1);
             } // if obj1 already loaded
 
-                // Add objects for joined NestleBowerArea rows
+                // Add objects for joined NestleOfficialRegions rows
 
-                $key2 = NestleBowerAreaPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                $key2 = NestleOfficialRegionsPeer::getPrimaryKeyHashFromRow($row, $startcol2);
                 if ($key2 !== null) {
-                    $obj2 = NestleBowerAreaPeer::getInstanceFromPool($key2);
+                    $obj2 = NestleOfficialRegionsPeer::getInstanceFromPool($key2);
                     if (!$obj2) {
 
-                        $cls = NestleBowerAreaPeer::getOMClass();
+                        $cls = NestleOfficialRegionsPeer::getOMClass();
 
                     $obj2 = new $cls();
                     $obj2->hydrate($row, $startcol2);
-                    NestleBowerAreaPeer::addInstanceToPool($obj2, $key2);
+                    NestleOfficialRegionsPeer::addInstanceToPool($obj2, $key2);
                 } // if $obj2 already loaded
 
-                // Add the $obj1 (NestleBower) to the collection in $obj2 (NestleBowerArea)
+                // Add the $obj1 (NestleBower) to the collection in $obj2 (NestleOfficialRegions)
                 $obj2->addNestleBower($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined NestleBowerArea rows
+
+                $key3 = NestleBowerAreaPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = NestleBowerAreaPeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = NestleBowerAreaPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    NestleBowerAreaPeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (NestleBower) to the collection in $obj3 (NestleBowerArea)
+                $obj3->addNestleBower($obj1);
+
+            } // if joined row is not null
+
+            $results[] = $obj1;
+        }
+        $stmt->closeCursor();
+
+        return $results;
+    }
+
+
+    /**
+     * Selects a collection of NestleBower objects pre-filled with all related objects except NestleOfficialRegions.
+     *
+     * @param      Criteria  $criteria
+     * @param      PropelPDO $con
+     * @param      String    $join_behavior the type of joins to use, defaults to Criteria::LEFT_JOIN
+     * @return array           Array of NestleBower objects.
+     * @throws PropelException Any exceptions caught during processing will be
+     *		 rethrown wrapped into a PropelException.
+     */
+    public static function doSelectJoinAllExceptNestleOfficialRegions(Criteria $criteria, $con = null, $join_behavior = Criteria::LEFT_JOIN)
+    {
+        $criteria = clone $criteria;
+
+        // Set the correct dbName if it has not been overridden
+        // $criteria->getDbName() will return the same object if not set to another value
+        // so == check is okay and faster
+        if ($criteria->getDbName() == Propel::getDefaultDB()) {
+            $criteria->setDbName(NestleBowerPeer::DATABASE_NAME);
+        }
+
+        NestleBowerPeer::addSelectColumns($criteria);
+        $startcol2 = NestleBowerPeer::NUM_HYDRATE_COLUMNS;
+
+        NestleNestleDistributorsPeer::addSelectColumns($criteria);
+        $startcol3 = $startcol2 + NestleNestleDistributorsPeer::NUM_HYDRATE_COLUMNS;
+
+        NestleBowerAreaPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + NestleBowerAreaPeer::NUM_HYDRATE_COLUMNS;
+
+        $criteria->addJoin(NestleBowerPeer::DISTRIBUTOR_ID, NestleNestleDistributorsPeer::ID, $join_behavior);
+
+        $criteria->addJoin(NestleBowerPeer::AREA_ID, NestleBowerAreaPeer::ID, $join_behavior);
+
+
+        $stmt = BasePeer::doSelect($criteria, $con);
+        $results = array();
+
+        while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
+            $key1 = NestleBowerPeer::getPrimaryKeyHashFromRow($row, 0);
+            if (null !== ($obj1 = NestleBowerPeer::getInstanceFromPool($key1))) {
+                // We no longer rehydrate the object, since this can cause data loss.
+                // See http://www.propelorm.org/ticket/509
+                // $obj1->hydrate($row, 0, true); // rehydrate
+            } else {
+                $cls = NestleBowerPeer::getOMClass();
+
+                $obj1 = new $cls();
+                $obj1->hydrate($row);
+                NestleBowerPeer::addInstanceToPool($obj1, $key1);
+            } // if obj1 already loaded
+
+                // Add objects for joined NestleNestleDistributors rows
+
+                $key2 = NestleNestleDistributorsPeer::getPrimaryKeyHashFromRow($row, $startcol2);
+                if ($key2 !== null) {
+                    $obj2 = NestleNestleDistributorsPeer::getInstanceFromPool($key2);
+                    if (!$obj2) {
+
+                        $cls = NestleNestleDistributorsPeer::getOMClass();
+
+                    $obj2 = new $cls();
+                    $obj2->hydrate($row, $startcol2);
+                    NestleNestleDistributorsPeer::addInstanceToPool($obj2, $key2);
+                } // if $obj2 already loaded
+
+                // Add the $obj1 (NestleBower) to the collection in $obj2 (NestleNestleDistributors)
+                $obj2->addNestleBower($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined NestleBowerArea rows
+
+                $key3 = NestleBowerAreaPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = NestleBowerAreaPeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = NestleBowerAreaPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    NestleBowerAreaPeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (NestleBower) to the collection in $obj3 (NestleBowerArea)
+                $obj3->addNestleBower($obj1);
 
             } // if joined row is not null
 
@@ -1098,7 +1426,12 @@ abstract class BaseNestleBowerPeer
         NestleNestleDistributorsPeer::addSelectColumns($criteria);
         $startcol3 = $startcol2 + NestleNestleDistributorsPeer::NUM_HYDRATE_COLUMNS;
 
+        NestleOfficialRegionsPeer::addSelectColumns($criteria);
+        $startcol4 = $startcol3 + NestleOfficialRegionsPeer::NUM_HYDRATE_COLUMNS;
+
         $criteria->addJoin(NestleBowerPeer::DISTRIBUTOR_ID, NestleNestleDistributorsPeer::ID, $join_behavior);
+
+        $criteria->addJoin(NestleBowerPeer::NESTLE_REGION, NestleOfficialRegionsPeer::ID, $join_behavior);
 
 
         $stmt = BasePeer::doSelect($criteria, $con);
@@ -1134,6 +1467,25 @@ abstract class BaseNestleBowerPeer
 
                 // Add the $obj1 (NestleBower) to the collection in $obj2 (NestleNestleDistributors)
                 $obj2->addNestleBower($obj1);
+
+            } // if joined row is not null
+
+                // Add objects for joined NestleOfficialRegions rows
+
+                $key3 = NestleOfficialRegionsPeer::getPrimaryKeyHashFromRow($row, $startcol3);
+                if ($key3 !== null) {
+                    $obj3 = NestleOfficialRegionsPeer::getInstanceFromPool($key3);
+                    if (!$obj3) {
+
+                        $cls = NestleOfficialRegionsPeer::getOMClass();
+
+                    $obj3 = new $cls();
+                    $obj3->hydrate($row, $startcol3);
+                    NestleOfficialRegionsPeer::addInstanceToPool($obj3, $key3);
+                } // if $obj3 already loaded
+
+                // Add the $obj1 (NestleBower) to the collection in $obj3 (NestleOfficialRegions)
+                $obj3->addNestleBower($obj1);
 
             } // if joined row is not null
 

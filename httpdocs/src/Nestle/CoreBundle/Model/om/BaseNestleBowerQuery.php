@@ -20,6 +20,7 @@ use Nestle\CoreBundle\Model\NestleBowerPeer;
 use Nestle\CoreBundle\Model\NestleBowerQuery;
 use Nestle\CoreBundle\Model\NestleBowerSalesReport;
 use Nestle\CoreBundle\Model\NestleNestleDistributors;
+use Nestle\CoreBundle\Model\NestleOfficialRegions;
 
 /**
  * @method NestleBowerQuery orderById($order = Criteria::ASC) Order by the id column
@@ -33,6 +34,7 @@ use Nestle\CoreBundle\Model\NestleNestleDistributors;
  * @method NestleBowerQuery orderByStatus($order = Criteria::ASC) Order by the status column
  * @method NestleBowerQuery orderByBowerId($order = Criteria::ASC) Order by the bower_id column
  * @method NestleBowerQuery orderByDistributor($order = Criteria::ASC) Order by the distributor column
+ * @method NestleBowerQuery orderByNestleRegion($order = Criteria::ASC) Order by the nestle_region column
  * @method NestleBowerQuery orderByDistributorId($order = Criteria::ASC) Order by the distributor_id column
  *
  * @method NestleBowerQuery groupById() Group by the id column
@@ -46,6 +48,7 @@ use Nestle\CoreBundle\Model\NestleNestleDistributors;
  * @method NestleBowerQuery groupByStatus() Group by the status column
  * @method NestleBowerQuery groupByBowerId() Group by the bower_id column
  * @method NestleBowerQuery groupByDistributor() Group by the distributor column
+ * @method NestleBowerQuery groupByNestleRegion() Group by the nestle_region column
  * @method NestleBowerQuery groupByDistributorId() Group by the distributor_id column
  *
  * @method NestleBowerQuery leftJoin($relation) Adds a LEFT JOIN clause to the query
@@ -55,6 +58,10 @@ use Nestle\CoreBundle\Model\NestleNestleDistributors;
  * @method NestleBowerQuery leftJoinNestleNestleDistributors($relationAlias = null) Adds a LEFT JOIN clause to the query using the NestleNestleDistributors relation
  * @method NestleBowerQuery rightJoinNestleNestleDistributors($relationAlias = null) Adds a RIGHT JOIN clause to the query using the NestleNestleDistributors relation
  * @method NestleBowerQuery innerJoinNestleNestleDistributors($relationAlias = null) Adds a INNER JOIN clause to the query using the NestleNestleDistributors relation
+ *
+ * @method NestleBowerQuery leftJoinNestleOfficialRegions($relationAlias = null) Adds a LEFT JOIN clause to the query using the NestleOfficialRegions relation
+ * @method NestleBowerQuery rightJoinNestleOfficialRegions($relationAlias = null) Adds a RIGHT JOIN clause to the query using the NestleOfficialRegions relation
+ * @method NestleBowerQuery innerJoinNestleOfficialRegions($relationAlias = null) Adds a INNER JOIN clause to the query using the NestleOfficialRegions relation
  *
  * @method NestleBowerQuery leftJoinNestleBowerArea($relationAlias = null) Adds a LEFT JOIN clause to the query using the NestleBowerArea relation
  * @method NestleBowerQuery rightJoinNestleBowerArea($relationAlias = null) Adds a RIGHT JOIN clause to the query using the NestleBowerArea relation
@@ -85,6 +92,7 @@ use Nestle\CoreBundle\Model\NestleNestleDistributors;
  * @method NestleBower findOneByStatus(int $status) Return the first NestleBower filtered by the status column
  * @method NestleBower findOneByBowerId(string $bower_id) Return the first NestleBower filtered by the bower_id column
  * @method NestleBower findOneByDistributor(string $distributor) Return the first NestleBower filtered by the distributor column
+ * @method NestleBower findOneByNestleRegion(int $nestle_region) Return the first NestleBower filtered by the nestle_region column
  * @method NestleBower findOneByDistributorId(int $distributor_id) Return the first NestleBower filtered by the distributor_id column
  *
  * @method array findById(int $id) Return NestleBower objects filtered by the id column
@@ -98,6 +106,7 @@ use Nestle\CoreBundle\Model\NestleNestleDistributors;
  * @method array findByStatus(int $status) Return NestleBower objects filtered by the status column
  * @method array findByBowerId(string $bower_id) Return NestleBower objects filtered by the bower_id column
  * @method array findByDistributor(string $distributor) Return NestleBower objects filtered by the distributor column
+ * @method array findByNestleRegion(int $nestle_region) Return NestleBower objects filtered by the nestle_region column
  * @method array findByDistributorId(int $distributor_id) Return NestleBower objects filtered by the distributor_id column
  */
 abstract class BaseNestleBowerQuery extends ModelCriteria
@@ -204,7 +213,7 @@ abstract class BaseNestleBowerQuery extends ModelCriteria
      */
     protected function findPkSimple($key, $con)
     {
-        $sql = 'SELECT `id`, `fname`, `lname`, `contact_number`, `bdate`, `username`, `password`, `area_id`, `status`, `bower_id`, `distributor`, `distributor_id` FROM `bower` WHERE `id` = :p0';
+        $sql = 'SELECT `id`, `fname`, `lname`, `contact_number`, `bdate`, `username`, `password`, `area_id`, `status`, `bower_id`, `distributor`, `nestle_region`, `distributor_id` FROM `bower` WHERE `id` = :p0';
         try {
             $stmt = $con->prepare($sql);
             $stmt->bindValue(':p0', $key, PDO::PARAM_INT);
@@ -654,6 +663,50 @@ abstract class BaseNestleBowerQuery extends ModelCriteria
     }
 
     /**
+     * Filter the query on the nestle_region column
+     *
+     * Example usage:
+     * <code>
+     * $query->filterByNestleRegion(1234); // WHERE nestle_region = 1234
+     * $query->filterByNestleRegion(array(12, 34)); // WHERE nestle_region IN (12, 34)
+     * $query->filterByNestleRegion(array('min' => 12)); // WHERE nestle_region >= 12
+     * $query->filterByNestleRegion(array('max' => 12)); // WHERE nestle_region <= 12
+     * </code>
+     *
+     * @see       filterByNestleOfficialRegions()
+     *
+     * @param     mixed $nestleRegion The value to use as filter.
+     *              Use scalar values for equality.
+     *              Use array values for in_array() equivalent.
+     *              Use associative array('min' => $minValue, 'max' => $maxValue) for intervals.
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return NestleBowerQuery The current query, for fluid interface
+     */
+    public function filterByNestleRegion($nestleRegion = null, $comparison = null)
+    {
+        if (is_array($nestleRegion)) {
+            $useMinMax = false;
+            if (isset($nestleRegion['min'])) {
+                $this->addUsingAlias(NestleBowerPeer::NESTLE_REGION, $nestleRegion['min'], Criteria::GREATER_EQUAL);
+                $useMinMax = true;
+            }
+            if (isset($nestleRegion['max'])) {
+                $this->addUsingAlias(NestleBowerPeer::NESTLE_REGION, $nestleRegion['max'], Criteria::LESS_EQUAL);
+                $useMinMax = true;
+            }
+            if ($useMinMax) {
+                return $this;
+            }
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+        }
+
+        return $this->addUsingAlias(NestleBowerPeer::NESTLE_REGION, $nestleRegion, $comparison);
+    }
+
+    /**
      * Filter the query on the distributor_id column
      *
      * Example usage:
@@ -771,6 +824,82 @@ abstract class BaseNestleBowerQuery extends ModelCriteria
         return $this
             ->joinNestleNestleDistributors($relationAlias, $joinType)
             ->useQuery($relationAlias ? $relationAlias : 'NestleNestleDistributors', '\Nestle\CoreBundle\Model\NestleNestleDistributorsQuery');
+    }
+
+    /**
+     * Filter the query by a related NestleOfficialRegions object
+     *
+     * @param   NestleOfficialRegions|PropelObjectCollection $nestleOfficialRegions The related object(s) to use as filter
+     * @param     string $comparison Operator to use for the column comparison, defaults to Criteria::EQUAL
+     *
+     * @return                 NestleBowerQuery The current query, for fluid interface
+     * @throws PropelException - if the provided filter is invalid.
+     */
+    public function filterByNestleOfficialRegions($nestleOfficialRegions, $comparison = null)
+    {
+        if ($nestleOfficialRegions instanceof NestleOfficialRegions) {
+            return $this
+                ->addUsingAlias(NestleBowerPeer::NESTLE_REGION, $nestleOfficialRegions->getId(), $comparison);
+        } elseif ($nestleOfficialRegions instanceof PropelObjectCollection) {
+            if (null === $comparison) {
+                $comparison = Criteria::IN;
+            }
+
+            return $this
+                ->addUsingAlias(NestleBowerPeer::NESTLE_REGION, $nestleOfficialRegions->toKeyValue('PrimaryKey', 'Id'), $comparison);
+        } else {
+            throw new PropelException('filterByNestleOfficialRegions() only accepts arguments of type NestleOfficialRegions or PropelCollection');
+        }
+    }
+
+    /**
+     * Adds a JOIN clause to the query using the NestleOfficialRegions relation
+     *
+     * @param     string $relationAlias optional alias for the relation
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return NestleBowerQuery The current query, for fluid interface
+     */
+    public function joinNestleOfficialRegions($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        $tableMap = $this->getTableMap();
+        $relationMap = $tableMap->getRelation('NestleOfficialRegions');
+
+        // create a ModelJoin object for this join
+        $join = new ModelJoin();
+        $join->setJoinType($joinType);
+        $join->setRelationMap($relationMap, $this->useAliasInSQL ? $this->getModelAlias() : null, $relationAlias);
+        if ($previousJoin = $this->getPreviousJoin()) {
+            $join->setPreviousJoin($previousJoin);
+        }
+
+        // add the ModelJoin to the current object
+        if ($relationAlias) {
+            $this->addAlias($relationAlias, $relationMap->getRightTable()->getName());
+            $this->addJoinObject($join, $relationAlias);
+        } else {
+            $this->addJoinObject($join, 'NestleOfficialRegions');
+        }
+
+        return $this;
+    }
+
+    /**
+     * Use the NestleOfficialRegions relation NestleOfficialRegions object
+     *
+     * @see       useQuery()
+     *
+     * @param     string $relationAlias optional alias for the relation,
+     *                                   to be used as main alias in the secondary query
+     * @param     string $joinType Accepted values are null, 'left join', 'right join', 'inner join'
+     *
+     * @return   \Nestle\CoreBundle\Model\NestleOfficialRegionsQuery A secondary query class using the current class as primary query
+     */
+    public function useNestleOfficialRegionsQuery($relationAlias = null, $joinType = Criteria::LEFT_JOIN)
+    {
+        return $this
+            ->joinNestleOfficialRegions($relationAlias, $joinType)
+            ->useQuery($relationAlias ? $relationAlias : 'NestleOfficialRegions', '\Nestle\CoreBundle\Model\NestleOfficialRegionsQuery');
     }
 
     /**

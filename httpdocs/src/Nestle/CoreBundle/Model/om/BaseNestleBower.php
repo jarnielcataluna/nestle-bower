@@ -26,6 +26,8 @@ use Nestle\CoreBundle\Model\NestleBowerSalesReport;
 use Nestle\CoreBundle\Model\NestleBowerSalesReportQuery;
 use Nestle\CoreBundle\Model\NestleNestleDistributors;
 use Nestle\CoreBundle\Model\NestleNestleDistributorsQuery;
+use Nestle\CoreBundle\Model\NestleOfficialRegions;
+use Nestle\CoreBundle\Model\NestleOfficialRegionsQuery;
 
 abstract class BaseNestleBower extends BaseObject implements Persistent
 {
@@ -115,6 +117,12 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
     protected $distributor;
 
     /**
+     * The value for the nestle_region field.
+     * @var        int
+     */
+    protected $nestle_region;
+
+    /**
      * The value for the distributor_id field.
      * @var        int
      */
@@ -124,6 +132,11 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
      * @var        NestleNestleDistributors
      */
     protected $aNestleNestleDistributors;
+
+    /**
+     * @var        NestleOfficialRegions
+     */
+    protected $aNestleOfficialRegions;
 
     /**
      * @var        NestleBowerArea
@@ -305,6 +318,17 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
     {
 
         return $this->distributor;
+    }
+
+    /**
+     * Get the [nestle_region] column value.
+     *
+     * @return int
+     */
+    public function getNestleRegion()
+    {
+
+        return $this->nestle_region;
     }
 
     /**
@@ -554,6 +578,31 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
     } // setDistributor()
 
     /**
+     * Set the value of [nestle_region] column.
+     *
+     * @param  int $v new value
+     * @return NestleBower The current object (for fluent API support)
+     */
+    public function setNestleRegion($v)
+    {
+        if ($v !== null && is_numeric($v)) {
+            $v = (int) $v;
+        }
+
+        if ($this->nestle_region !== $v) {
+            $this->nestle_region = $v;
+            $this->modifiedColumns[] = NestleBowerPeer::NESTLE_REGION;
+        }
+
+        if ($this->aNestleOfficialRegions !== null && $this->aNestleOfficialRegions->getId() !== $v) {
+            $this->aNestleOfficialRegions = null;
+        }
+
+
+        return $this;
+    } // setNestleRegion()
+
+    /**
      * Set the value of [distributor_id] column.
      *
      * @param  int $v new value
@@ -621,7 +670,8 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
             $this->status = ($row[$startcol + 8] !== null) ? (int) $row[$startcol + 8] : null;
             $this->bower_id = ($row[$startcol + 9] !== null) ? (string) $row[$startcol + 9] : null;
             $this->distributor = ($row[$startcol + 10] !== null) ? (string) $row[$startcol + 10] : null;
-            $this->distributor_id = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
+            $this->nestle_region = ($row[$startcol + 11] !== null) ? (int) $row[$startcol + 11] : null;
+            $this->distributor_id = ($row[$startcol + 12] !== null) ? (int) $row[$startcol + 12] : null;
             $this->resetModified();
 
             $this->setNew(false);
@@ -631,7 +681,7 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
             }
             $this->postHydrate($row, $startcol, $rehydrate);
 
-            return $startcol + 12; // 12 = NestleBowerPeer::NUM_HYDRATE_COLUMNS.
+            return $startcol + 13; // 13 = NestleBowerPeer::NUM_HYDRATE_COLUMNS.
 
         } catch (Exception $e) {
             throw new PropelException("Error populating NestleBower object", $e);
@@ -656,6 +706,9 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
 
         if ($this->aNestleBowerArea !== null && $this->area_id !== $this->aNestleBowerArea->getId()) {
             $this->aNestleBowerArea = null;
+        }
+        if ($this->aNestleOfficialRegions !== null && $this->nestle_region !== $this->aNestleOfficialRegions->getId()) {
+            $this->aNestleOfficialRegions = null;
         }
         if ($this->aNestleNestleDistributors !== null && $this->distributor_id !== $this->aNestleNestleDistributors->getId()) {
             $this->aNestleNestleDistributors = null;
@@ -700,6 +753,7 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
         if ($deep) {  // also de-associate any related objects?
 
             $this->aNestleNestleDistributors = null;
+            $this->aNestleOfficialRegions = null;
             $this->aNestleBowerArea = null;
             $this->collNestleBowerAccounts = null;
 
@@ -830,6 +884,13 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
                     $affectedRows += $this->aNestleNestleDistributors->save($con);
                 }
                 $this->setNestleNestleDistributors($this->aNestleNestleDistributors);
+            }
+
+            if ($this->aNestleOfficialRegions !== null) {
+                if ($this->aNestleOfficialRegions->isModified() || $this->aNestleOfficialRegions->isNew()) {
+                    $affectedRows += $this->aNestleOfficialRegions->save($con);
+                }
+                $this->setNestleOfficialRegions($this->aNestleOfficialRegions);
             }
 
             if ($this->aNestleBowerArea !== null) {
@@ -963,6 +1024,9 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
         if ($this->isColumnModified(NestleBowerPeer::DISTRIBUTOR)) {
             $modifiedColumns[':p' . $index++]  = '`distributor`';
         }
+        if ($this->isColumnModified(NestleBowerPeer::NESTLE_REGION)) {
+            $modifiedColumns[':p' . $index++]  = '`nestle_region`';
+        }
         if ($this->isColumnModified(NestleBowerPeer::DISTRIBUTOR_ID)) {
             $modifiedColumns[':p' . $index++]  = '`distributor_id`';
         }
@@ -1009,6 +1073,9 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
                         break;
                     case '`distributor`':
                         $stmt->bindValue($identifier, $this->distributor, PDO::PARAM_STR);
+                        break;
+                    case '`nestle_region`':
+                        $stmt->bindValue($identifier, $this->nestle_region, PDO::PARAM_INT);
                         break;
                     case '`distributor_id`':
                         $stmt->bindValue($identifier, $this->distributor_id, PDO::PARAM_INT);
@@ -1118,6 +1185,12 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
                 }
             }
 
+            if ($this->aNestleOfficialRegions !== null) {
+                if (!$this->aNestleOfficialRegions->validate($columns)) {
+                    $failureMap = array_merge($failureMap, $this->aNestleOfficialRegions->getValidationFailures());
+                }
+            }
+
             if ($this->aNestleBowerArea !== null) {
                 if (!$this->aNestleBowerArea->validate($columns)) {
                     $failureMap = array_merge($failureMap, $this->aNestleBowerArea->getValidationFailures());
@@ -1223,6 +1296,9 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
                 return $this->getDistributor();
                 break;
             case 11:
+                return $this->getNestleRegion();
+                break;
+            case 12:
                 return $this->getDistributorId();
                 break;
             default:
@@ -1265,7 +1341,8 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
             $keys[8] => $this->getStatus(),
             $keys[9] => $this->getBowerId(),
             $keys[10] => $this->getDistributor(),
-            $keys[11] => $this->getDistributorId(),
+            $keys[11] => $this->getNestleRegion(),
+            $keys[12] => $this->getDistributorId(),
         );
         $virtualColumns = $this->virtualColumns;
         foreach ($virtualColumns as $key => $virtualColumn) {
@@ -1275,6 +1352,9 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
         if ($includeForeignObjects) {
             if (null !== $this->aNestleNestleDistributors) {
                 $result['NestleNestleDistributors'] = $this->aNestleNestleDistributors->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
+            }
+            if (null !== $this->aNestleOfficialRegions) {
+                $result['NestleOfficialRegions'] = $this->aNestleOfficialRegions->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
             }
             if (null !== $this->aNestleBowerArea) {
                 $result['NestleBowerArea'] = $this->aNestleBowerArea->toArray($keyType, $includeLazyLoadColumns,  $alreadyDumpedObjects, true);
@@ -1356,6 +1436,9 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
                 $this->setDistributor($value);
                 break;
             case 11:
+                $this->setNestleRegion($value);
+                break;
+            case 12:
                 $this->setDistributorId($value);
                 break;
         } // switch()
@@ -1393,7 +1476,8 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
         if (array_key_exists($keys[8], $arr)) $this->setStatus($arr[$keys[8]]);
         if (array_key_exists($keys[9], $arr)) $this->setBowerId($arr[$keys[9]]);
         if (array_key_exists($keys[10], $arr)) $this->setDistributor($arr[$keys[10]]);
-        if (array_key_exists($keys[11], $arr)) $this->setDistributorId($arr[$keys[11]]);
+        if (array_key_exists($keys[11], $arr)) $this->setNestleRegion($arr[$keys[11]]);
+        if (array_key_exists($keys[12], $arr)) $this->setDistributorId($arr[$keys[12]]);
     }
 
     /**
@@ -1416,6 +1500,7 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
         if ($this->isColumnModified(NestleBowerPeer::STATUS)) $criteria->add(NestleBowerPeer::STATUS, $this->status);
         if ($this->isColumnModified(NestleBowerPeer::BOWER_ID)) $criteria->add(NestleBowerPeer::BOWER_ID, $this->bower_id);
         if ($this->isColumnModified(NestleBowerPeer::DISTRIBUTOR)) $criteria->add(NestleBowerPeer::DISTRIBUTOR, $this->distributor);
+        if ($this->isColumnModified(NestleBowerPeer::NESTLE_REGION)) $criteria->add(NestleBowerPeer::NESTLE_REGION, $this->nestle_region);
         if ($this->isColumnModified(NestleBowerPeer::DISTRIBUTOR_ID)) $criteria->add(NestleBowerPeer::DISTRIBUTOR_ID, $this->distributor_id);
 
         return $criteria;
@@ -1490,6 +1575,7 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
         $copyObj->setStatus($this->getStatus());
         $copyObj->setBowerId($this->getBowerId());
         $copyObj->setDistributor($this->getDistributor());
+        $copyObj->setNestleRegion($this->getNestleRegion());
         $copyObj->setDistributorId($this->getDistributorId());
 
         if ($deepCopy && !$this->startCopy) {
@@ -1617,6 +1703,58 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
         }
 
         return $this->aNestleNestleDistributors;
+    }
+
+    /**
+     * Declares an association between this object and a NestleOfficialRegions object.
+     *
+     * @param                  NestleOfficialRegions $v
+     * @return NestleBower The current object (for fluent API support)
+     * @throws PropelException
+     */
+    public function setNestleOfficialRegions(NestleOfficialRegions $v = null)
+    {
+        if ($v === null) {
+            $this->setNestleRegion(NULL);
+        } else {
+            $this->setNestleRegion($v->getId());
+        }
+
+        $this->aNestleOfficialRegions = $v;
+
+        // Add binding for other direction of this n:n relationship.
+        // If this object has already been added to the NestleOfficialRegions object, it will not be re-added.
+        if ($v !== null) {
+            $v->addNestleBower($this);
+        }
+
+
+        return $this;
+    }
+
+
+    /**
+     * Get the associated NestleOfficialRegions object
+     *
+     * @param PropelPDO $con Optional Connection object.
+     * @param $doQuery Executes a query to get the object if required
+     * @return NestleOfficialRegions The associated NestleOfficialRegions object.
+     * @throws PropelException
+     */
+    public function getNestleOfficialRegions(PropelPDO $con = null, $doQuery = true)
+    {
+        if ($this->aNestleOfficialRegions === null && ($this->nestle_region !== null) && $doQuery) {
+            $this->aNestleOfficialRegions = NestleOfficialRegionsQuery::create()->findPk($this->nestle_region, $con);
+            /* The following can be used additionally to
+                guarantee the related object contains a reference
+                to this object.  This level of coupling may, however, be
+                undesirable since it could result in an only partially populated collection
+                in the referenced object.
+                $this->aNestleOfficialRegions->addNestleBowers($this);
+             */
+        }
+
+        return $this->aNestleOfficialRegions;
     }
 
     /**
@@ -2434,6 +2572,7 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
         $this->status = null;
         $this->bower_id = null;
         $this->distributor = null;
+        $this->nestle_region = null;
         $this->distributor_id = null;
         $this->alreadyInSave = false;
         $this->alreadyInValidation = false;
@@ -2475,6 +2614,9 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
             if ($this->aNestleNestleDistributors instanceof Persistent) {
               $this->aNestleNestleDistributors->clearAllReferences($deep);
             }
+            if ($this->aNestleOfficialRegions instanceof Persistent) {
+              $this->aNestleOfficialRegions->clearAllReferences($deep);
+            }
             if ($this->aNestleBowerArea instanceof Persistent) {
               $this->aNestleBowerArea->clearAllReferences($deep);
             }
@@ -2495,6 +2637,7 @@ abstract class BaseNestleBower extends BaseObject implements Persistent
         }
         $this->collNestleBowerSalesReports = null;
         $this->aNestleNestleDistributors = null;
+        $this->aNestleOfficialRegions = null;
         $this->aNestleBowerArea = null;
     }
 

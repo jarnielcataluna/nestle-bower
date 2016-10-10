@@ -55,10 +55,15 @@
         <column name="status" type="integer" size="11" />
         <column name="bower_id" type="varchar" size="255" />
         <column name="distributor" type="varchar" size="255" />
+        <column name="nestle_region" type="integer" size="11" />
         <column name="distributor_id" type="integer" size="11" />
 
         <foreign-key foreignTable="nestle_distributors">
             <reference local="distributor_id" foreign="id" />
+        </foreign-key>
+
+        <foreign-key foreignTable="nestle_official_regions">
+            <reference local="nestle_region" foreign="id" />
         </foreign-key>
 
         <foreign-key foreignTable="area">
@@ -295,6 +300,12 @@
         <column name="title" type="varchar" size="255" />
         <column name="date" type="varchar" size="255" />
         <column name="link" type="varchar" size="255" />
+        <column name="status" type="integer" size="15" />
+    </table>
+
+    <table name="nestle_official_regions" phpName="NestleOfficialRegions">
+        <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
+        <column name="nestle_region" type="varchar" size="255" />
         <column name="status" type="integer" size="15" />
     </table>
 </database>

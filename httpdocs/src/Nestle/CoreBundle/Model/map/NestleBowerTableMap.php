@@ -53,6 +53,7 @@ class NestleBowerTableMap extends TableMap
         $this->addColumn('status', 'Status', 'INTEGER', false, 11, null);
         $this->addColumn('bower_id', 'BowerId', 'VARCHAR', false, 255, null);
         $this->addColumn('distributor', 'Distributor', 'VARCHAR', false, 255, null);
+        $this->addForeignKey('nestle_region', 'NestleRegion', 'INTEGER', 'nestle_official_regions', 'id', false, 11, null);
         $this->addForeignKey('distributor_id', 'DistributorId', 'INTEGER', 'nestle_distributors', 'id', false, 11, null);
         // validators
     } // initialize()
@@ -63,6 +64,7 @@ class NestleBowerTableMap extends TableMap
     public function buildRelations()
     {
         $this->addRelation('NestleNestleDistributors', 'Nestle\\CoreBundle\\Model\\NestleNestleDistributors', RelationMap::MANY_TO_ONE, array('distributor_id' => 'id', ), null, null);
+        $this->addRelation('NestleOfficialRegions', 'Nestle\\CoreBundle\\Model\\NestleOfficialRegions', RelationMap::MANY_TO_ONE, array('nestle_region' => 'id', ), null, null);
         $this->addRelation('NestleBowerArea', 'Nestle\\CoreBundle\\Model\\NestleBowerArea', RelationMap::MANY_TO_ONE, array('area_id' => 'id', ), null, null);
         $this->addRelation('NestleBowerAccount', 'Nestle\\CoreBundle\\Model\\NestleBowerAccount', RelationMap::ONE_TO_MANY, array('id' => 'bower_id', ), null, null, 'NestleBowerAccounts');
         $this->addRelation('NestleBowerInvoices', 'Nestle\\CoreBundle\\Model\\NestleBowerInvoices', RelationMap::ONE_TO_MANY, array('id' => 'bower_id', ), null, null, 'NestleBowerInvoicess');

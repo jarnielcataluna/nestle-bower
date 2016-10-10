@@ -1,7 +1,7 @@
 # This file is auto-generated during the composer install
 parameters:
     database_driver: pdo_mysql
-#     database_port: 3306
+    database_port: 3306
     database_port: null
 
 #    database_host: nestlebower.cw83yqenjm1v.ap-southeast-1.rds.amazonaws.com
@@ -9,10 +9,16 @@ parameters:
 #    database_user: npbower
 #    database_password: $$nestleBoWAws123
 
-    database_host: localhost
-    database_name: nestlebower
-    database_user: root
-    database_password: root
+    database_host: 205.186.138.226
+    database_name: bower_test_db
+    database_user: bowapptest
+    database_password: 123bowapptest@@
+
+
+#    database_host: localhost
+#    database_name: nestlebower
+#    database_user: root
+#    database_password: root
 
     mailer_transport: smtp
     mailer_host: smtp.gmail.com

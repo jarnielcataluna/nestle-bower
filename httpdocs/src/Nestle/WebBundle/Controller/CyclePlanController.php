@@ -2,6 +2,7 @@
 
 namespace Nestle\WebBundle\Controller;
 
+use Aws\S3\S3Client;
 use Nestle\CoreBundle\Model\NestleNestleCyclePlans;
 use Nestle\CoreBundle\Model\NestleNestleCyclePlansPeer;
 use Nestle\CoreBundle\Model\NestleNestleDistributors;
@@ -43,19 +44,39 @@ class CyclePlanController extends Controller
             $newCp->setStatus($cpStatus);
             $newCp->setDate($cpDate);
 
+            $bucket = 'nestle-bower-image-hosting';
+            $keyname = 'AKIAITYEZ5N4YWEYTVWQ';
+            $filepath = 'cycle-plans';
 
-            if (!$_FILES['cp_file']['error'] > 0) {
-                $targetDir = $request->server->get('DOCUMENT_ROOT') . C::DIR_CYCLE_PLAN;
-                $file = $_FILES['cp_file'];
-                $preName = 'cp_file';
-                $image = UP::upload($targetDir, $file, $preName);
+            $s3 = S3Client::factory([
+                'region' => 'ap-southeast-1',
+                'version' => 'latest'
+            ]);
 
-                if (isset($image['name'])) {
-                    $newCp->setLink($image['name']);
-//                    var_dump($image['name']); exit;
+            $prod = $request->files->get('cp_file');
 
+            if (!$_FILES['image']['error'] > 0) {
+
+                try {
+
+                    $result = $s3->putObject(array(
+                        'Bucket' => $bucket,
+                        'Key' => "cycle-plans/" . $_FILES['cp_file']['name'],
+                        'Body' => fopen($prod->getPathName(), 'rb'),
+                        'ContentType' => $_FILES['cp_file']['type'],
+                        'StorageClass' => 'STANDARD',
+                        'ACL' => 'public-read'
+                    ));
+
+                    // Print the URL to the object.
+                    echo $result['ObjectURL'] . "\n";
+                } catch (S3Exception $e) {
+                    echo $e->getMessage() . "\n";
                 }
 
+                if (isset($_FILES['cp_file']['name'])) {
+                    $newCp->setLink($_FILES['cp_file']['name']);
+                }
             }
 
             $newCp->save();
