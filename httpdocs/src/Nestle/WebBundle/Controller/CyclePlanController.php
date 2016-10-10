@@ -155,7 +155,7 @@ class CyclePlanController extends Controller
 
 
 
-    public function bowerDeleteAction($id)
+    public function deleteCyclePlanAction($id)
     {
         $cyclePlan = NestleNestleCyclePlansPeer::retrieveByPK($id);
 
