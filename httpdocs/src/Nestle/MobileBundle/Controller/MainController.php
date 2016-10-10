@@ -283,7 +283,6 @@ class MainController extends Controller
 		$bower = NestleBowerPeer::retrieveByPK($bowerId);
 		$region = $bower->getNestleBowerArea()->getNestleBowerCity()->getNestleBowerProvince()->getNestleBowerRegion()->getId();
 		$promos = NestleBowerPromosPeer::getAllActiveForUser($region);
-		var_dump($promos);
 
 		if ($key == $this->webkey && isset($bowerId)) {
 
